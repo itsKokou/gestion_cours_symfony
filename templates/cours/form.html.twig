@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription form{% endblock %}
+
+
+{% block content %}
+
+<div class="w-full rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800">
+    
+    <h4 class="mb-4 mt-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Enregistrement de Cours
+    </h4>
+    <div class="px-4 py-3 mt-4 0">
+        {{form_start(form)}}
+            {% if errors is defined and errors != [] %}
+                <div  class="inline-flex mt-1 mb-4 w-full text-red-600 text-center" >
+                    <span>{{errors['unique']}}</span>
+                </div>
+            {% endif %}
+            <div  class="inline-flex mt-1 mb-4 w-full" >
+                <label  class="mb-2  w-10">
+                    {{form_label(form.semestre) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.semestre)}} <span>{{form_errors(form.semestre)}}</span></div>
+            </div>
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.module) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.module)}} <span>{{form_errors(form.module)}}</span></div>
+            </div>
+        {% if form.professeur is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10">
+                    {{form_label(form.professeur) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.professeur)}} <span>{{form_errors(form.professeur)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.nbreHeureTotal is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.nbreHeureTotal,'Heure_Totale') }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.nbreHeureTotal)}} <span>{{form_errors(form.nbreHeureTotal)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.nbreHeureRestantPlan is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.nbreHeureRestantPlan,'Rest_Planifié') }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.nbreHeureRestantPlan)}} <span>{{form_errors(form.nbreHeureRestantPlan)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.classes is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.classes) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.classes)}} <span>{{form_errors(form.classes)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.isArchived is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10">
+                </label>
+                <div style="padding-left:10%" class="w-full inline-flex">{{form_widget(form.isArchived)}}{{form_label(form.isArchived,'Archivé')}}</div>
+            </div>
+        {% endif %}
+        {{form_end(form)}}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+
+    $('.select-module').on('change.select2', function (e) {
+      const tab = $(this).select2('data');
+      const tab2 = $('.select-semestre').select2('data');
+      var ids =[] ;
+      if ($(this).select2('data')["length"]==1) {
+        ids[0] = tab2[0]['id'];
+        ids[1] = tab[0]['id'];
+      }
+      
+      const path = "/cours/plan/module/"+ids;
+      $.ajax({
+        url: path,
+        type: "GET",
+        dataType: 'JSON', 
+        success:function(data) {
+            window.location.href=data
+        }
+      });
+    });
+
+    $('.select-prof').on('change.select2', function (e) {
+      const tab = $(this).select2('data');
+      var id =0 ;
+      if ($(this).select2('data')["length"]==1) {
+        id = tab[0]['id'];
+      }
+      
+      const path = "/cours/plan/professeur/"+id;
+      $.ajax({
+        url: path,
+        type: "GET",
+        dataType: 'JSON', 
+        success:function(data) {
+           window.location.href=data
+        }
+      });
+    });
+</script>
+{% endblock %}

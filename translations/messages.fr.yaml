@@ -1,0 +1,7 @@
+module :
+  notblank : Ce champ est obligatoire
+  unique : Ce champ doit etre unique
+
+classe :
+  notblank : Ce champ est obligatoire
+  unique : Le libelle doit etre unique

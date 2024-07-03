@@ -1,0 +1,30 @@
+
+<div class=" w-full rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800">
+    
+    <h4 class=" text-left mb-4 mt-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Enregistrement de déclaration
+    </h4>
+    <div class="px-4 py-3 mt-4 0 ">
+        {{form_start(form)}}
+        {% if succes is defined  %}
+            <div  class="inline-flex mt-1 mb-4 w-full text-green-600 text-center" >
+                <span>{{succes}}</span>
+            </div>
+        {% endif %}
+        <div  class="inline-flex mt-1 mb-2 w-full" >
+            <label  class="mb-2 w-14 text-left" style="width:120px;">
+                {{form_label(form.motif) }}
+            </label>
+            <div style="padding-left:5%" class="w-full">{{form_widget(form.motif)}}<span class="text-left">{{form_errors(form.motif)}}</span></div>
+        </div>
+        <div  class="inline-flex mt-1 mb-2 w-full">
+            <label class="mb-2 w-14" style="width:120px;">
+                {{form_label(form.description) }}
+            </label>
+            <div style="padding-left:5%" class="w-full">{{form_widget(form.description)}}<span class="text-left">{{form_errors(form.description)}}</span></div>
+        </div>
+        {{form_end(form)}}
+    </div>
+
+</div>
+

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Salle form{% endblock %}
+
+
+{% block content %}
+
+<div class="w-full rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-900">
+    
+    <h4 class="mb-4 mt-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Enregistrement de Salle
+    </h4>
+    <div class="px-4 py-3 mt-4 0">
+        {{form_start(form)}}
+        <div  class="inline-flex mt-1 mb-4 w-full" >
+            <label  class="mb-2  w-10">
+                {{form_label(form.libelle) }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.libelle)}} <span>{{form_errors(form.libelle)}}</span></div>
+        </div>
+        <div  class="inline-flex mt-1 mb-4 w-full">
+            <label class="mb-2  w-10">
+                {{form_label(form.nbrePlace,"Capacité") }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.nbrePlace)}} <span>{{form_errors(form.nbrePlace)}}</span></div>
+        </div>
+        {% if form.isArchived is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10">
+                </label>
+                <div style="padding-left:10%" class="w-full inline-flex">{{form_widget(form.isArchived)}}{{form_label(form.isArchived,'Archivé')}}</div>
+            </div>
+        {% endif %}
+        {{form_end(form)}}
+    </div>
+
+</div>
+
+{% endblock %}
+
+

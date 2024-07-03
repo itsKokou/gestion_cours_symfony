@@ -1,0 +1,48 @@
+<h4 class="mb-4 mt-4 text-lg font-semibold text-gray-500 dark:text-white">
+    Les absences de {{etudiant.nomComplet}} en {{anneeEncours.libelle}}
+  </h4>
+
+  <div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+      <table class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-sm font-semibold tracking-wide text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900"
+            style="color:#eb1616;"
+          >
+            <th class="px-4 py-3">N°</th>
+            <th class="px-4 py-3">Date</th>
+            <th class="px-4 py-3">Cours</th>
+            <th class="px-4 py-3">Professeur</th>
+            <th class="px-4 py-3">Horaire</th>
+            <th class="px-4 py-3">Semestre</th>
+          </tr>
+        </thead>
+        <tbody
+          class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-900"
+        >
+        {% for ab in absences %}
+          <tr class="text-gray-700 dark:text-gray-400">
+            <td class="px-4 py-3 text-sm">
+              {{ab.id}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{ab.session.date|date("d/m/Y")}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{ab.session.cours.module.libelle}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{ ab.session.professeur != null ? ab.session.professeur.nomComplet : ab.session.cours.professeur.nomComplet }}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{ab.session.heureD|format_datetime('none', 'short', locale='fr')}} à {{ab.session.heureF|format_datetime('none', 'short', locale='fr')}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{ab.session.cours.semestre.libelle}}
+            </td>
+          </tr>
+        {% endfor %}    
+        </tbody>
+      </table>
+    </div>

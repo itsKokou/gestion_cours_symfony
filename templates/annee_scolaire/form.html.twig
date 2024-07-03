@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Année form{% endblock %}
+
+
+{% block content %}
+
+<div class="w-full rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800">
+    
+    <h4 class="mb-4 mt-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Enregistrement d'Année Scolaire
+    </h4>
+    <div class="px-4 py-3 mt-4 0">
+        {% if succes is defined and succes is not null %}
+            <div  class="inline-flex mt-1 mb-4 w-full text-green-600 text-center" >
+                <span>{{succes}}</span>
+            </div>
+        {% endif %}
+        {{form_start(form)}}
+        {% if form.date is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full" >
+                <label  class="mb-2  w-10", style="width:150px;">
+                    {{form_label(form.date, "Année de début") }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.date)}} <span>{{form_errors(form.date)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.libelle is defined %}
+            <div class="mt-4"><div  class="inline-flex mt-1 mb-4 w-full" >
+                <label  class="mb-2  w-10", style="width:150px;">
+                    {{form_label(form.libelle, "Année Scolaire") }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.libelle)}}</div>
+            </div>
+        {% endif %}
+        <div  class="inline-flex mt-1 mb-4 w-full">
+            <label class="mb-2  w-10" style="width:150px;">
+            </label>
+            <div style="padding-left:10%" class="w-full inline-flex">{{form_widget(form.isActive)}}{{form_label(form.isActive,'Actuelle')}}</div>
+        </div>
+        {% if form.isArchived is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10" style="width:150px;">
+                </label>
+                <div style="padding-left:10%" class="w-full inline-flex">{{form_widget(form.isArchived)}}{{form_label(form.isArchived,'Archivé')}}</div>
+            </div>
+        {% endif %}
+        {{form_end(form)}}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        const date = document.querySelector(".anneeDebut");
+        if(date !=null){
+            date.addEventListener("blur", function (event) {
+                if(+date.value !=0 && +date.value>=2024){
+                    const path = "/annee/show/libelle/"+date.value
+                    redirectToPath(path);
+                }
+            })
+        }
+    </script>
+{% endblock %}
+
+

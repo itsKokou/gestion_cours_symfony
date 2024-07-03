@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Professeur{% endblock %}
+
+{% block content %}
+<div class=" mt-6 flex justify-end">
+  <a href="{{path('app_professeur_save')}}"
+    class="px-4 py-2 text-base font-medium leading-5 text-cyan-500 transition-colors duration-150 bg-transparent border-2 border-cyan-500 rounded-lg hover:text-white hover:bg-cyan-500   focus:outline-none focus:shadow-outline-purple"
+  >
+    Nouveau
+  </a>
+</div>
+<div class="w-full flex">
+    <form method="Post" action="{{path('app_professeur')}}" style="width: 80%;" class="w-auto rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-900">
+      <div  class="inline-flex mt-1 mb-2 w-full justify-center">
+        <div style="width: 38%; margin-right:80px;" class="text-base px-4 py-3 border border-gray-300 rounded-md dark:bg-zinc-600">
+          <label for="select-prof-classe" class="block mb-2 font-medium text-gray-900 dark:text-white">Classe</label>
+          <select id="select-prof-classe" style="width:80%;" class="bg-gray-50 dark:bg-white border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-700 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option data-path="{{ path('professeur_filtre_classe',{idC:0}) }}" value='0'  >All</option>
+            {% for item in classes %}
+              <option data-path="{{ path('professeur_filtre_classe',{idC:item.id}) }}"
+              {% if selectedValue['classe'] is defined and selectedValue['classe']== item.id %}selected{% endif %} 
+              value="{{item.id}}">{{item.libelle}}</option>  
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div style="width: 38%; margin-right:80px;" class="text-base px-4 py-3 border border-gray-300 rounded-md dark:bg-zinc-600">
+          <label for="select-prof-module" class="block mb-2 font-medium text-gray-900 dark:text-white">Module</label>
+          <select id="select-prof-module" style="width:80%;" class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500 block w-96 p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-700 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option data-path="{{ path('professeur_filtre_module',{idM:0}) }}" value='0' >All</option>
+            {% for item in modules %}
+              <option data-path="{{ path('professeur_filtre_module',{idM:item.id}) }}"
+              {% if selectedValue['module'] is defined and selectedValue['module']== item.id %}selected{% endif %}
+              value="{{item.id}}">{{item.libelle}}</option>  
+            {% endfor %}
+          </select>
+        </div>
+        <div style="width: 38%;" class="text-base px-4 py-3 border border-gray-300 rounded-md dark:bg-zinc-600">
+          <label for="select-prof-grade" class="block mb-2 font-medium text-gray-900 dark:text-white">Grade</label>
+          <select id="select-prof-grade" style="width:80%;" class="bg-gray-50 border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500 block w-96 p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-700 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option data-path="{{ path('professeur_filtre_grade',{idG:0}) }}" value='0' >All</option>
+            {% for item in grades %}
+              <option data-path="{{ path('professeur_filtre_grade',{grade:item}) }}"
+              {% if selectedValue['grade'] is defined and selectedValue['grade']== item %}selected{% endif %}
+              value="{{item}}">{{item}}</option>  
+            {% endfor %}
+          </select>
+        </div>
+        
+      </div>
+    </form>
+</div>
+  <h4 class="mb-4 mt-4 text-lg font-semibold text-gray-600 dark:text-white">
+    Liste des Professeurs
+  </h4>
+
+  <div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+      <table class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-sm  font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
+            style="color:#eb1616;"
+          >
+            <th class="px-4 py-3">{{ knp_pagination_sortable(pagination, 'N°', 'p.id') }}</th>
+            <th class="px-4 py-3 {{ pagination.isSorted('p.nomComplet') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Nom et Prénoms', 'p.nomComplet') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('p.email') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Email', 'p.email') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('p.grade') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Grade', 'p.grade') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('p.specialite') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Specialité', 'p.specialite') }}
+            </th>
+            <th class="px-4 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody
+          class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-900"
+        >
+        {% for data in pagination %}
+          <tr class="text-gray-700 dark:text-gray-400">
+            <td class="px-4 py-3 text-sm">
+              {{data.id}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.nomComplet}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.email}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.grade}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.specialite}}
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center space-x-4 text-sm">
+                <a href="{{path('app_professeur_save',{id:data.id})}}"  class="text-yellow-500 border rounded-md border-yellow-500 hover:bg-yellow-500 hover:text-white">
+                  <button
+                  class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 rounded-lg  focus:outline-none focus:shadow-outline-gray"
+                  aria-label="Edit"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                    ></path>
+                  </svg>Edit
+                </button>
+                </a>
+                <a href="{{path('app_professeur_details',{id:data.id})}}"  class="bg-cyan-500 text-white hover:bg-cyan-700 border rounded-md border-cyan-500">
+                <button 
+                  class="btn-details flex items-center justify-between px-2 py-2 text-sm font-medium leading-5"
+                  aria-label="Delete"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>Details
+                </button>
+                </a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}    
+        </tbody>
+      </table>
+    </div>
+      <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div> 
+  </div>
+  {% if htmlValueClasse is not null %}
+    <div id="profdetailsmodule" class="hidden w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-900 sm:rounded-lg sm:m-4 sm:max-w-xl">
+      {{htmlValueModule|raw}}
+    </div>
+
+    <div id="profdetailsclasse" class=" w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-900 sm:rounded-lg sm:m-4 sm:max-w-xl">
+      {{htmlValueClasse|raw}}
+    </div>
+  {% endif %}
+   
+{% endblock %}
+
+{% block js %}
+  <script>
+    const prof_classe =document.querySelector('#select-prof-classe');
+    getData(prof_classe);
+    const prof_module =document.querySelector('#select-prof-module');
+    getData(prof_module);
+    const prof_grade =document.querySelector('#select-prof-grade');
+    getData(prof_grade);
+  </script>
+
+  {% if htmlValueClasse is not null %}
+    <script>
+      const detailsModules = document.querySelector('#profdetailsmodule');
+      const detailsClasses = document.querySelector('#profdetailsclasse');
+      Swal.fire({
+        width:700,
+        html: detailsClasses,
+        confirmButtonText:"Modules",
+        confirmButtonColor:'#22d3ee',
+        showConfirmButton: true,
+        denyButtonText:"Fermer",denyButtonColor:'#f87171',showDenyButton: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          detailsModules.classList.toggle('hidden');
+          Swal.fire({width:700,html: detailsModules,confirmButtonText:"Fermer",confirmButtonColor:'#f87171',showConfirmButton: true});
+        }
+      });
+    </script>
+  {% endif %}
+
+{% endblock %}

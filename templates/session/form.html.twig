@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Session form{% endblock %}
+
+
+{% block content %}
+
+<div class="w-full rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800">
+    
+    <h4 class="mb-4 mt-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Enregistrement de Session de cours
+    </h4>
+    <div class="px-4 py-3 mt-4 0">
+        {{form_start(form)}}
+            <div  class="inline-flex mt-1 mb-4 w-full" >
+                <label  class="mb-2  w-10">
+                    {{form_label(form.date) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.date)}} 
+                <span class="text-red-600">{{errors is defined and errors['dateError'] is defined ? errors['dateError']:'' }}</span></div>
+            </div>
+        {% if form.heureD is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.heureD,'Heure_Début') }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.heureD)}} 
+                <span class="text-red-600">{{errors is defined and errors['heureDError'] is defined ? errors['heureDError']:'' }}</span></div>
+            </div>
+        {% endif %}
+        {% if form.heureF is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.heureF,'Heure_Fin') }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.heureF)}} 
+                <span class="text-red-600">{{errors is defined and errors['heureFError'] is defined ? errors['heureFError']:'' }}</span></div>
+            </div>
+        {% endif %}
+        {% if form.isProf is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-14">
+                    {{form_label(form.isProf) }}
+                </label>
+                <div style="padding-left:8%;" class="w-fit">{{form_widget(form.isProf)}} </div>
+            </div>
+        {% endif %}
+        {% if form.professeur is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10">
+                    {{form_label(form.professeur) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.professeur)}} <span>{{form_errors(form.professeur)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.salle is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.salle) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.salle)}} <span>{{form_errors(form.salle)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.codeSession is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.codeSession,'Code_Session') }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.codeSession)}} <span>{{form_errors(form.codeSession)}}</span></div>
+            </div>
+        {% endif %}
+        {% if form.lieu is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-14">
+                    {{form_label(form.lieu) }}
+                </label>
+                <div style="padding-left:8%;" class="w-fit">{{form_widget(form.lieu)}} </div>
+            </div>
+        {% endif %}
+        {% if form.quitter is defined %}
+            <a href="{{asset("/session/plan/abort")}}">{{form_row(form.quitter) }}</a>
+        {% endif %}
+        {% if form.isArchived is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10">
+                </label>
+                <div style="padding-left:10%" class="w-full inline-flex">{{form_widget(form.isArchived)}}{{form_label(form.isArchived,'Archivé')}}</div>
+            </div>
+        {% endif %}
+        {{form_end(form)}}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+
+    document.querySelector(".date").addEventListener("change", function (event) {
+        redirectToPath("/session/plan/date/"+document.querySelector(".date").value);
+    });
+
+    document.querySelector(".heure-d").addEventListener("blur", function (event) {
+        redirectToPath("/session/plan/heured/"+document.querySelector(".heure-d").value);
+    });
+
+    document.querySelector(".heure-f").addEventListener("blur", function (event) {
+        redirectToPath("/session/plan/heuref/"+document.querySelector(".heure-f").value);
+    });
+
+    const code =  document.querySelector(".code");
+    if(code!=null){
+        code.addEventListener("blur", function (event) {
+            redirectToPath("/session/plan/code/"+document.querySelector(".code").value);
+        });
+    }
+    
+    const isProf = document.querySelector(".isProf");
+    if(isProf != null){
+            isProf.addEventListener("click", function (event) {
+            const radio = document.getElementsByName("session[isProf]");
+            var val;
+            for (i = 0; i < radio.length; i++) {
+                if (radio[i].checked){
+                val = radio[i].value;
+                }
+            }
+            redirectToPath("/session/plan/isprof/"+val);
+        });
+    }
+
+    const lieu = document.querySelector(".lieu");
+    if(lieu != null){
+            lieu.addEventListener("click", function (event) {
+            const radio = document.getElementsByName("session[lieu]");
+            var val;
+            for (i = 0; i < radio.length; i++) {
+                if (radio[i].checked){
+                val = radio[i].value;
+                }
+            }
+            redirectToPath("/session/plan/lieu/"+val);
+        });
+    }
+
+    $('.select-prof').on('change.select2', function (e) {
+      const tab = $(this).select2('data');
+      var id =0 ;
+      if ($(this).select2('data')["length"]==1) {
+        id = tab[0]['id'];
+      }
+      
+      const path = "/session/plan/professeur/"+id;
+      $.ajax({
+        url: path,
+        type: "GET",
+        dataType: 'JSON', 
+        success:function(data) {
+           window.location.href=data
+        }
+      });
+    });
+
+    $('.salle').on('change.select2', function (e) {
+      const tab = $(this).select2('data');
+      var id =0 ;
+      if ($(this).select2('data')["length"]==1) {
+        id = tab[0]['id'];
+      }
+      
+      const path = "/session/plan/salle/"+id;
+      $.ajax({
+        url: path,
+        type: "GET",
+        dataType: 'JSON', 
+        success:function(data) {
+           window.location.href=data
+        }
+      });
+    });
+</script>
+{% endblock %}

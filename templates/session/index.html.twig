@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Session{% endblock %}
+
+{% block content %}
+    <div id="calendar"  class=" mt-2 w-auto h-auto dark:bg-gray-50">
+    </div>
+    {% if htmlDeclaration is not null %}
+        <div id="declaration" class="hidden w-fit px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-900 sm:rounded-lg sm:m-4">
+            {{htmlDeclaration|raw}}
+        </div>
+    {% endif %}
+
+    {% if htmlEtudiant is not null %}
+        <div id="etudiant" class="hidden w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-900 sm:rounded-lg sm:m-4">
+            {{htmlEtudiant|raw}}
+        </div>
+    {% endif %}
+
+    {% if htmlAbsence is not null %}
+        <div id="absence" class="hidden w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark:bg-gray-900 sm:rounded-lg sm:m-4">
+            {{htmlAbsence|raw}}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    <script>
+        window.onload = () => {
+            let calendarElt = document.querySelector("#calendar");
+            let calendar = new FullCalendar.Calendar(calendarElt,{
+                initialView : 'timeGridWeek',
+                locale : 'fr',
+                timeZone : 'Africa/Senegal',
+                slotMinTime : '08:00:00',
+                slotMaxTime : '20:00:00',
+                firstDay : 1,
+                views: {
+                    dayGridMonth: { buttonText: "Mois" },
+                    timeGridWeek: { buttonText: "Semaine" },
+                    timeGridDay: { buttonText: "Jour" }
+                },
+                headerToolbar : {
+                    start : "prev,next today",
+                    center : 'title',
+                    end : 'dayGridMonth,timeGridWeek,timeGridDay',
+                },
+                events : {{ data|raw }},
+                eventContent: function(arg) {
+                    // var buttonHtml = '<button class="event-button px-2 py-1 text-black transition-colors duration-150 bg-white border border-white rounded-lg hover:text-white hover:bg-red-600 focus:outline-none focus:shadow-outline-red" data-event-id="' + arg.event.id + '">Click me</button>';
+                    return {
+                        html: arg.timeText + '</b><br> '+ '</b> <b>' + arg.event.title + '</b><br>' + arg.event.extendedProps.description + '</b><br>' + arg.event.extendedProps.location //+ '</b><br> ' + buttonHtml
+                    };
+                }
+            });
+
+            calendar.render();
+            // calendarElt.addEventListener('click', function(e) {
+            //     if (e.target.classList.contains('event-button')) {
+            //         var eventId = e.target.getAttribute('data-event-id');
+            //         handleButtonClick(eventId);
+            //     }
+            // });
+
+            // function handleButtonClick(eventId) {
+            // alert('Button clicked for event ID:'+ eventId);
+            // // Vous pouvez effectuer une action personnalisée ici en fonction de l'ID de l'événement
+            // }
+        }
+    </script>
+
+    {% if htmlDeclaration is not null %}
+        <script>
+            const declaration = document.querySelector('#declaration');
+            declaration.classList.toggle('hidden');
+            Swal.fire({
+                width:1100,
+                html: declaration,
+                showConfirmButton: false,
+                denyButtonText:"Fermer",denyButtonColor:'#f87171',showDenyButton: true
+            }).then((result) => {
+                if (result.isDenied) {
+                    redirectToPath("/session/vider/session");
+                }
+            });
+        </script>
+    {% endif %}
+
+    {% if htmlDeclarationError is not null %}
+        <script>
+            Swal.fire(
+                {
+                    title: 'Oops...',
+                    text: "Vous avez déjà effectué une déclaration pour cette session de cours",
+                    icon: 'info',
+                    confirmButtonClass: 'btn btn-primary w-xs mt-2',
+                    showCloseButton: true,
+                    timer : 3500,
+                }
+            )
+        </script>
+    {% endif %}
+
+    {% if htmlEtudiant is not null %}
+        <script>
+            const listeEtudiants = document.querySelector('#etudiant');
+            listeEtudiants.classList.toggle('hidden');
+            Swal.fire({
+                width:900,
+                html: listeEtudiants,
+                showConfirmButton: false,
+                denyButtonText:"Fermer",denyButtonColor:'#f87171',showDenyButton: true
+            }).then((result) => {
+                if (result.isDenied) {
+                    redirectToPath("/session/vider/session");
+                }
+            });
+        </script>
+    {% endif %}
+
+    {% if htmlAbsence is not null and htmlAbsence != 0 %}
+        <script>
+            const listeAbsents = document.querySelector('#absence');
+            listeAbsents.classList.toggle('hidden');
+            Swal.fire({
+                width:900,
+                html: listeAbsents,
+                showConfirmButton: false,
+                denyButtonText:"Fermer",denyButtonColor:'#f87171',showDenyButton: true
+            }).then((result) => {
+                if (result.isDenied) {
+                    redirectToPath("/session/vider/session");
+                }
+            });
+        </script>
+    {% endif %}
+
+    {% if htmlAbsence is not null and htmlAbsence == 0 %}
+        <script>
+            Swal.fire(
+                {
+                    title: 'Présence Totale',
+                    text: "Aucun étudiant n'a été absent durant cette séance !",
+                    icon: 'info',
+                    confirmButtonClass: 'btn btn-primary w-xs mt-2',
+                    showCloseButton: true,
+                    timer : 3500,
+                }
+            );
+        </script>
+    {% endif %}
+
+    <script>
+        const btnSave = document.querySelector("#enregistrer-absence");
+        if(btnSave != null){
+            btnSave.addEventListener("click",function (event){
+                const checkboxList = document.querySelectorAll(".presence");
+                var ids = [];
+                var i = 0;
+                checkboxList.forEach(box => {
+                    if (box.checked) {
+                        ids[i] = box.value;
+                        i++;
+                    }
+                });
+                const path = "/session/absences/save/"+ids;
+                redirectToPath(path);
+            });
+        }
+
+        const annulerSession = document.querySelector("#annuler-session");
+        if(annulerSession != null){
+            annulerSession.addEventListener("click",function (event){
+                Swal.fire(
+                    {
+                        title: 'Annuler Session',
+                        text: "Souhaitez-vous confirmer l'annulation de cette session ?",
+                        icon: 'warning',
+                        showCloseButton: false,
+                        showConfirmButton: false,
+                        showCancelButton: true,
+                        cancelButtonText : "Non, Annuler",
+                        showDenyButton: true,
+                        denyButtonText : "Oui, Confirmer",
+                        reverseButtons: true
+                    }
+                ).then((result) => {
+                    if (result.isDenied) {
+                        redirectToPath("/session/archiver");
+                    }else if(!result.isConfirmed){
+                        redirectToPath("/session/vider/session");
+                    }
+                });
+            })
+        }
+    </script>
+
+{% endblock %}

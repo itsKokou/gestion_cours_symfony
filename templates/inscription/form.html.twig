@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription form{% endblock %}
+
+
+{% block content %}
+
+<div class="w-full rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800">
+    
+    <h4 class="mb-4 mt-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        {{entete}}
+    </h4>
+    <div class="px-4 py-3 mt-4 0">
+        {{form_start(form)}}
+        {% if form.etudiant.matricule is defined %}
+            {% if errorInscription is defined  %}
+                <div  class="inline-flex mt-1 mb-4 w-full text-red-600 text-center" >
+                    <span>{{errorInscription}}</span>
+                </div>
+            {% endif %}
+            <div  class="inline-flex mt-1 mb-4 w-full" >
+                <label  class="mb-2  w-10">
+                    {{form_label(form.etudiant.matricule, 'Matricule') }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.etudiant.matricule)}} <span>{{form_errors(form.etudiant.matricule)}}</span></div>
+            </div>
+        {% endif %}
+            <div  class="inline-flex mt-1 mb-4 w-full" >
+                <label  class="mb-2  w-10">
+                    {{form_label(form.etudiant.nomComplet, 'Nom') }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.etudiant.nomComplet)}} <span>{{form_errors(form.etudiant.nomComplet)}}</span></div>
+            </div>
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.etudiant.email) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.etudiant.email)}} <span>{{form_errors(form.etudiant.email)}}</span></div>
+            </div>
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10">
+                    {{form_label(form.etudiant.password) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.etudiant.password)}} <span>{{form_errors(form.etudiant.password)}}</span></div>
+            </div>
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.etudiant.tuteur) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.etudiant.tuteur)}} <span>{{form_errors(form.etudiant.tuteur)}}</span></div>
+            </div>
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2 w-10">
+                    {{form_label(form.classe) }}
+                </label>
+                <div style="padding-left:10%" class="w-full">{{form_widget(form.classe)}} <span>{{form_errors(form.classe)}}</span></div>
+            </div>
+            {% if form.photo is defined %}
+                <div  class="inline-flex mt-1 mb-4 w-full" >
+                    <label  class="mb-2  w-10">
+                        {{form_label(form.photo) }}
+                    </label>
+                    <div style="padding-left:10%" class="w-full">{{form_widget(form.photo)}} <span>{{form_errors(form.photo)}}</span></div>
+                </div>
+            {% endif %}
+        {{form_end(form)}}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+    const matricule =  document.querySelector(".matricule");
+    if(matricule!=null){
+        matricule.addEventListener("blur", function (event) {
+            redirectToPath("/reinscription/matricule/"+document.querySelector(".matricule").value);
+        });
+    }
+</script>
+{% endblock %}

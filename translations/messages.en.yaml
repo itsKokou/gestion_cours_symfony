@@ -1,0 +1,7 @@
+module :
+  notblank : The Field is required
+  unique : This field must be unique
+
+classe :
+  notblank : The Field is required
+  unique : This field must be unique

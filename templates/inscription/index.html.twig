@@ -1,0 +1,205 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block content %}
+<div class=" mt-6 flex justify-between">
+  <button
+    id="print"
+    class=" dark:text-white text-gray-700 border rounded-lg  hover:bg-gray-300 hover:text-black flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 focus:outline-none focus:shadow-outline-gray"
+    aria-label="Edit"
+  >
+    <svg
+      stroke="currentColor"
+      class="w-5 h-5"
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z"
+      ></path>
+    </svg>Imprimer
+  </button>
+  <a href="{{path('app_inscription_save')}}"
+    class="px-4 py-2 text-base font-medium leading-5 text-cyan-500 transition-colors duration-150 bg-transparent border-2 border-cyan-500 rounded-lg hover:text-white hover:bg-cyan-500"
+  >
+    Nouveau
+  </a>
+</div>
+<div class="w-full flex">
+    <form style="width: 50%;" class="w-auto rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-900">
+      <div  class="inline-flex mt-1 mb-2 w-full justify-center">
+        <div style="width: 38%; margin-right:80px;" class="text-base px-4 py-3 border border-gray-300 rounded-md dark:bg-zinc-600">
+          <label for="select-inscription-classe" class="block mb-2 font-medium text-gray-900 dark:text-white">Classe</label>
+          <select id="select-inscription-classe" style="width:80%;" class="bg-gray-50 dark:bg-white border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-700 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option data-path="{{ path('inscription_filtre_classe',{id:0}) }}" value='0'>All</option>
+            {% for item in classes %}
+              <option data-path="{{ path('inscription_filtre_classe',{id:item.id}) }}"
+              {% if selectedValue['classe'] is defined and selectedValue['classe']== item.id %}selected{% endif %} 
+              value="{{item.id}}">{{item.libelle}}</option>  
+            {% endfor %}
+          </select>
+        </div>
+        <div style="width: 38%;" class="text-base px-4 py-3 border border-gray-300 rounded-md dark:bg-zinc-600">
+          <label for="input-inscription-date" class="block mb-2 font-medium text-gray-900 dark:text-white">Date</label>
+          <input type="date" data-path="{{ path('inscription_filtre_date',{}) }}" name="date" id="input-inscription-date" style="width:80%;" class="bg-gray-50 dark:bg-white border border-gray-300 text-gray-900 rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-700 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        </div>
+      </div>
+    </form>
+</div>
+  <h4 class="mb-4 mt-4 text-lg font-semibold text-gray-600 dark:text-white">
+    Liste des Inscrits de {{ app.session.get("anneeEncours").libelle }} {% if selectedValue['date']!= null %}enregistrés le {{selectedValue['date']|date("d/m/y")}} {% endif %}
+  </h4>
+
+  <div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+      <table class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
+            style="color:#eb1616;"
+          >
+            <th class="px-4 py-3">{{ knp_pagination_sortable(pagination, 'N°', 'i.id') }}</th>
+            <th class="px-4 py-3 {{ pagination.isSorted('i.createAt') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Date', 'i.createAt') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('e.nomComplet') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Etudiant', 'e.nomComplet') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('e.matricule') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Matricule', 'e.matricule') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('e.email') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Email', 'e.email') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('c.libelle') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Classe', 'c.libelle') }}
+            </th>
+            <th class="px-4 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody
+          class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-900"
+        >
+        {% for data in pagination %}
+          <tr class="text-gray-700 dark:text-gray-400">
+            <td class="px-4 py-3 text-sm">
+              {{data.id}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.createAt|date("d/m/Y")}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.etudiant.nomComplet}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.etudiant.matricule}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.etudiant.email}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.classe.libelle}}
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center space-x-4 text-sm">
+                <button id="archiverInscription" data-path="{{ path('inscription_archiver',{id:data.id}) }}"
+                class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-red-500 border rounded-md border-red-500 hover:bg-red-500 hover:text-white"
+                aria-label="Edit"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>Archiver
+                </button>
+                
+              </div>
+            </td>
+          </tr>
+        {% endfor %}    
+        </tbody>
+      </table>
+    </div>
+  <div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+  </div>
+</div>  
+{% endblock %}
+
+{% block js %}
+  <script>
+    const inscription_classe =document.querySelector('#select-inscription-classe');
+    getData(inscription_classe);
+    
+    const inscription_date =document.querySelector('#input-inscription-date');
+    inscription_date.addEventListener("input",function(event){
+      const path=inscription_date.getAttribute('data-path')+"/"+ inscription_date.value;
+      fetch(path,{
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json' 
+        }
+        })
+        .then(response => response.json())
+        .then(url => {
+          window.location.href=url;
+        })
+        .catch(err => console.log(err))
+    });
+  </script>
+
+  <script>
+    const inscriptions_archiver =document.querySelectorAll('#archiverInscription');
+    inscriptions_archiver.forEach(btn => {
+      btn.addEventListener("click",function (event) {
+        const path = btn.getAttribute("data-path");
+        redirectToPath(path);
+      })
+    });
+  </script>
+
+  {% if htmlSwal is not null %}
+    <script>
+      let etu = `{{htmlSwal["etudiant"]}}`;
+      let mat = `{{htmlSwal["matricule"]}}`;
+      let classe = `{{htmlSwal["classe"]}}`;
+      Swal.fire(
+          {
+              title: 'Annuler Inscription',
+              text: `Souhaitez-vous confirmer l'annulation de l'inscription de l'étudiant ${etu} de matricule ${mat} pour la classe ${classe} ?`,
+              icon: 'warning',
+              showCloseButton: false,
+              showConfirmButton: false,
+              showCancelButton: true,
+              cancelButtonText : "Non, Annuler",
+              showDenyButton: true,
+              denyButtonText : "Oui, Confirmer",
+              reverseButtons: true
+          }
+        ).then((result) => {
+            if (result.isDenied) {
+                redirectToPath("/inscription/archiver");
+            }else if(!result.isConfirmed){
+                redirectToPath("/inscription/archiver/vider");
+            }
+        });
+    </script>
+  {% endif %}
+
+  <script>
+    const print = document.querySelector("#print");
+    print.addEventListener('click', function(event){
+      redirectToPath("/imprimer/pdf");
+    });
+  </script>
+{% endblock %}
+

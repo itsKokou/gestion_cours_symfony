@@ -1,0 +1,51 @@
+{# tailwindcss Sliding pagination control implementation #}
+{% if pageCount > 1 %}
+<div class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-600 dark:bg-gray-900">
+    <div class="flex items-center col-span-4">
+        
+    </div>
+    <div class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
+        <div class="Table navigation inline-flex items-center">
+        {# {% if first is defined and current != first %}
+            <span class="bg-white text-blue-600 px-3 py-2 text-lg border-r border-gray-400 font-bold">
+                <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">&laquo;&nbsp;</a>
+            </span>
+        {% endif %} #}
+
+        {% if previous is defined %}
+          
+            <a rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}" class="px-3 py-2 border border-r-0 border-gray-400 rounded-l-lg text-red-600 bg-white focus:outline-none focus:shadow-outline-purple hover:bg-gray-300  ">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</a>
+         
+        {% else %}
+               
+            <a class="px-3 py-2 border border-r-0 border-gray-400  rounded-l-lg focus:outline-none focus:shadow-outline-purple bg-white  disabled">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</a>
+            
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}" class="px-3 py-2 bg-white border hover:bg-gray-300 text-red-600  border-r-0 border-gray-400  focus:outline-none focus:shadow-outline-red">
+                    {{ page }}
+                </a>
+            {% else %}
+                <span class="px-3 py-2 focus:outline-none focus:shadow-outline-r text-white transition-colors duration-150 bg-red-600 border border-r-0 border-red-600">{{ page }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <a rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}"  class= "px-3 border bg-white text-red-600 border-r-0 border-gray-400 hover:bg-gray-300  py-2 rounded-r-lg focus:outline-none focus:shadow-outline-purple" >
+                {{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;
+            </a>
+        {% else %}
+            <a class="px-3 border border-r-0 border-gray-400  py-2 rounded-r-lg focus:outline-none bg-white focus:shadow-outline-purple disabled">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;</a>
+        {% endif %}
+
+        {# {% if last is defined and current != last %}
+            <span class="bg-white text-blue-600 px-3 py-2 text-lg border-gray-400 font-bold">
+                <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">&gt;&gt;</a>
+            </span>
+        {% endif %} #}
+        </div>
+    </div>
+</div>
+{% endif %}

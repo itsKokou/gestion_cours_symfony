@@ -1,0 +1,84 @@
+{% if finSession is defined and finSession == false %}
+  <div class=" flex justify-end">
+    <button id="annuler-session"
+      class="px-4 py-2 text-sm font-medium leading-5 text-red-600 transition-colors duration-150 bg-transparent border border-red-600 rounded-lg hover:text-white hover:bg-red-600   focus:outline-none focus:shadow-outline-red"
+    >
+      Annuler Session
+    </button>
+  </div>
+{% endif %} 
+{% if isAbsence is defined and isAbsence == true %}
+  <div class=" flex justify-end">
+    <a href="{{path('session_voir',{element:'absences'})}}"
+      class="px-4 py-2 text-base font-medium leading-5 text-cyan-500 transition-colors duration-150 bg-transparent border-2 border-cyan-500 rounded-lg hover:text-white hover:bg-cyan-500   focus:outline-none focus:shadow-outline-purple"
+    >
+      Voir les Absents
+    </a>
+  </div>
+{% endif %}  
+<h4 class="mb-4 mt-4 text-lg font-semibold text-gray-600 dark:text-white">
+    Liste des Etudiants 
+</h4>
+
+<div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+      <table class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-sm font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
+            style="color:#eb1616;"
+          >
+            <th class="px-4 py-3">N°</th>
+            <th class="px-4 py-3">Matricule</th>
+            <th class="px-4 py-3">Nom et Prénoms</th>
+            <th class="px-4 py-3">Email</th>
+            <th class="px-4 py-3">Classe</th>
+            {% if isAbsence is defined and isAbsence == false and finSession == true %}
+                <th class="px-4 py-3">Présent</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody
+          class="bg-white text-left divide-y dark:divide-gray-700 dark:bg-gray-900"
+        >
+        {% for cl in classes %}
+            {% for data in cl.inscriptions %}
+                {% if data.anneeScolaire.isActive == true %}
+                    <tr class="text-gray-700 dark:text-gray-400">
+                        <td class="px-4 py-3 text-sm">
+                        {{data.etudiant.id}}
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                        {{data.etudiant.matricule}}
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                        {{data.etudiant.nomComplet}}
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                        {{data.etudiant.email}}
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                        {{cl.libelle}}
+                        </td>
+                        {% if isAbsence is defined and isAbsence == false and finSession == true %}
+                            <td class="px-4 py-3">
+                                <input class="presence" type="checkbox" name="presence" value={{data.etudiant.id}}>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+            {% endfor %}  
+        {% endfor %}    
+        </tbody>
+      </table>
+    </div>
+</div>
+{% if isAbsence is defined and isAbsence == false and finSession == true %}
+  <div class=" mt-6 flex justify-end">
+    <button id="enregistrer-absence"
+      class="px-4 py-2 text-sm font-medium leading-5 text-red-600 transition-colors duration-150 bg-transparent border border-red-600 rounded-lg hover:text-white hover:bg-red-600   focus:outline-none focus:shadow-outline-red"
+    >
+      Enregistrer
+    </button>
+  </div>
+{% endif %}

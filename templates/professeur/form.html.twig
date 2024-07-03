@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Professeur form{% endblock %}
+
+
+{% block content %}
+
+<div class="w-full rounded-lg px-4 py-3 mt-4 text-gray-500 border bg-white dark:border-gray-700 dark:text-gray-400 dark:bg-gray-800">
+    
+    <h4 class="mb-4 mt-1 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Enregistrement de Professeur
+    </h4>
+    <div class="px-4 py-3 mt-4 0">
+        {{form_start(form)}}
+        <div  class="inline-flex mt-1 mb-2 w-full" >
+            <label  class="mb-2  w-10">
+                {{form_label(form.email) }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.email)}}</div>
+        </div>
+        <div  class="inline-flex mt-1 mb-2 w-full">
+            <label class="mb-2  w-10">
+                {{form_label(form.password) }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.password)}}</div>
+        </div>
+        <div  class="inline-flex mt-1 mb-2 w-full">
+            <label class="mb-2 w-10">
+                {{form_label(form.nomComplet, 'Nom') }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.nomComplet)}}</div>
+        </div>
+        <div  class="inline-flex mt-1 mb-2 w-full">
+            <label class="mb-2 w-10">
+                {{form_label(form.specialite) }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.specialite)}}</div>
+        </div>
+        <div  class="inline-flex mt-1 mb-2 w-full">
+            <label class="mb-2 w-10">
+                {{form_label(form.grade) }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.grade)}}</div>
+        </div>
+        <div  class="inline-flex mt-1 mb-2 w-full">
+            <label class="mb-2 w-10">
+                {{form_label(form.modules) }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.modules)}}</div>
+        </div>
+        <div  class="inline-flex mt-1 mb-2 w-full">
+            <label class="mb-2 w-10">
+                {{form_label(form.classes) }}
+            </label>
+            <div style="padding-left:10%" class="w-full">{{form_widget(form.classes)}}</div>
+        </div>
+       {% if form.isArchived is defined %}
+            <div  class="inline-flex mt-1 mb-4 w-full">
+                <label class="mb-2  w-10">
+                </label>
+                <div style="padding-left:10%" class="w-full inline-flex">{{form_widget(form.isArchived)}}{{form_label(form.isArchived,'Archivé')}}</div>
+            </div>
+        {% endif %}
+        {{form_end(form)}}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+</script>
+{% endblock %}

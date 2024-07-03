@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Salle{% endblock %}
+
+{% block content %}
+<div class=" mt-6 flex justify-end">
+  <a href="{{path('app_salle_save')}}"
+    class="px-4 py-2 text-base font-medium leading-5 text-cyan-500 transition-colors duration-150 bg-transparent border-2 border-cyan-500 rounded-lg hover:text-white hover:bg-cyan-500   focus:outline-none focus:shadow-outline-purple"
+  >
+    Nouveau
+  </a>
+</div>
+
+  <h4 class="mb-4 mt-4 text-lg font-semibold text-gray-600 dark:text-white">
+    Liste des Salles
+  </h4>
+
+  <div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <div class="w-full overflow-x-auto">
+      <table class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-sm font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
+            style="color:#eb1616;"
+          >
+            <th class="px-4 py-3 ">{{ knp_pagination_sortable(pagination, 'N°', 's.id') }}</th>
+            <th class="px-4 py-3 {{ pagination.isSorted('s.libelle') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Libellé', 's.libelle') }}
+            </th>
+            <th class="px-4 py-3 {{ pagination.isSorted('s.nbrePlace') ? 'sorted':'' }}">
+              {{ knp_pagination_sortable(pagination, 'Nbre de Place', 's.nbrePlace') }}
+            </th>
+            <th class="px-4 py-3">Action</th>
+          </tr>
+        </thead>
+        <tbody
+          class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-900"
+        >
+        {% for data in pagination %}
+          <tr class="text-gray-700 dark:text-gray-400">
+            <td class="px-4 py-3 text-sm">
+              {{data.id}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{data.libelle}}
+            </td>
+            <td class="px-4 py-3 text-sm">
+              {{ data.nbrePlace }}
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center space-x-4 text-sm">
+                <a href="{{path('app_salle_save',{id:data.id})}}" class="text-yellow-500 border rounded-md border-yellow-500 hover:bg-yellow-500 hover:text-white">
+                  <button
+                  class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5  rounded-lg  focus:outline-none focus:shadow-outline-gray"
+                  aria-label="Edit"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                    ></path>
+                  </svg>Edit
+                </button>
+                </a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}    
+        </tbody>
+      </table>
+    </div>
+  <div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+  </div>  
+{% endblock %}
